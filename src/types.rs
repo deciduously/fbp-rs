@@ -3,7 +3,7 @@
 pub type ItemCountType = u32;
 pub type GraphicsVariation = u8;
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct BlueprintBook {
     pub item: String,                      // always "blueprint-book"
     pub label: String,                     // user-defined name
@@ -12,7 +12,7 @@ pub struct BlueprintBook {
     pub version: i64, // map version of the map the blueprint was created in
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Blueprint {
     pub item: String,          // always "blueprint"
     pub label: String,         // user-defined name
@@ -23,7 +23,7 @@ pub struct Blueprint {
 }
 
 // NOTE underground_type sepcified as "type" - might be an issue
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Entity {
     pub entity_number: i32, // 1-based index of entity
     pub name: String,       // e.g. "offshore-pump"
@@ -53,68 +53,68 @@ pub struct Entity {
     pub station: Option<String>, // Name of the train station
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Tile {
     pub name: String,       // prototype name of the tile (e.g. "concrete")
     pub position: Position, // within the blueprint
 }
 
 // 0,0 is the center
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Icon {
     pub index: i32,       // Index of the icon, 1-based
     pub signal: SignalID, // the icon that is displayed
 }
 
 // This is supposed to be "name": string, "type": string but "type" is reserved by Rust
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct SignalID {
     pub name: String,        // name of the signal prototype this signal is set ot
     pub signal_type: String, // either "item", "fluid", or "virtual" - you should make an enum with FromStr/ToStr
 }
 
 // the spec has digits 1 and 2 as key names
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Connection {
     pub one: ConnectionPoint, // Default for everything that doens't have multiple connection points
     pub two: Option<ConnectionPoint>, // e.g. the "output" of an arithmetic combinator
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ConnectionPoint {
     pub red: Vec<ConnectionData>,   // all red wire connections
     pub green: Vec<ConnectionData>, // all green wire connections
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ConnectionData {
     pub entity_id: i32,
     pub circuit_id: i32,
 }
 
 // One or more key-val pairs - key is String of iitem name, value is amt requested
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ItemRequest {}
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ItemFilter {
     pub name: String, // name of prototype
     pub index: i32,   // index of filter, 1-based
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct InfinitySettings {
     pub remove_unfiltered_items: bool, // this is a checkbox in the UI
     pub filters: Option<Vec<InfinityFilter>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct InfinityFilter {
     pub name: String, // name of the prototype
     pub count: ItemCountType,
@@ -122,21 +122,21 @@ pub struct InfinityFilter {
     pub index: i32,   // 1-based
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct LogisticFilter {
     pub name: String,         // name ofthe prototype
     pub index: i32,           // 1-based
     pub count: ItemCountType, // number filter is set to, 0 for storage chests
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct SpeakerParameter {
     pub playback_volume: f64,    // volume of speaker
     pub playback_globally: bool, // global playback enabled
     pub allow_polyphony: bool,   // speaks for itself
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct SpeakerAlertParameter {
     pub show_alert: bool,
     pub show_on_map: bool,        // is icon shown on map
@@ -144,7 +144,7 @@ pub struct SpeakerAlertParameter {
     pub alert_message: String,    // body of the alert
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Color {
     pub r: i32,
     pub g: i32,

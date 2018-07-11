@@ -1,0 +1,536 @@
+{
+    "blueprint": {
+        "icons": [
+            {
+                "signal": {
+                    "type": "virtual",
+                    "name": "signal-4"
+                },
+                "index": 1
+            },
+            {
+                "signal": {
+                    "type": "item",
+                    "name": "splitter"
+                },
+                "index": 2
+            }
+        ],
+        "entities": [
+            {
+                "entity_number": 1,
+                "name": "splitter",
+                "position": {
+                    "x": 1,
+                    "y": -2.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 2,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": -3
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 3,
+                "name": "underground-belt",
+                "position": {
+                    "x": 3,
+                    "y": -3
+                },
+                "direction": 4,
+                "type": "output"
+            },
+            {
+                "entity_number": 4,
+                "name": "transport-belt",
+                "position": {
+                    "x": -7,
+                    "y": -1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 5,
+                "name": "transport-belt",
+                "position": {
+                    "x": -7,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 6,
+                "name": "underground-belt",
+                "position": {
+                    "x": -5,
+                    "y": -1
+                },
+                "direction": 2,
+                "type": "input"
+            },
+            {
+                "entity_number": 7,
+                "name": "transport-belt",
+                "position": {
+                    "x": -5,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 8,
+                "name": "splitter",
+                "position": {
+                    "x": -6,
+                    "y": -1.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 9,
+                "name": "transport-belt",
+                "position": {
+                    "x": -4,
+                    "y": -1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 10,
+                "name": "transport-belt",
+                "position": {
+                    "x": -4,
+                    "y": -2
+                },
+                "direction": 4
+            },
+            {
+                "entity_number": 11,
+                "name": "splitter",
+                "position": {
+                    "x": -3,
+                    "y": -0.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 12,
+                "name": "transport-belt",
+                "position": {
+                    "x": -2,
+                    "y": -1
+                }
+            },
+            {
+                "entity_number": 13,
+                "name": "transport-belt",
+                "position": {
+                    "x": -2,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 14,
+                "name": "transport-belt",
+                "position": {
+                    "x": -1,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 15,
+                "name": "underground-belt",
+                "position": {
+                    "x": -1,
+                    "y": -1
+                },
+                "direction": 2,
+                "type": "output"
+            },
+            {
+                "entity_number": 16,
+                "name": "transport-belt",
+                "position": {
+                    "x": 0,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 17,
+                "name": "splitter",
+                "position": {
+                    "x": 0,
+                    "y": -0.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 18,
+                "name": "underground-belt",
+                "position": {
+                    "x": 1,
+                    "y": -1
+                },
+                "direction": 2,
+                "type": "input"
+            },
+            {
+                "entity_number": 19,
+                "name": "underground-belt",
+                "position": {
+                    "x": 3,
+                    "y": -1
+                },
+                "type": "output"
+            },
+            {
+                "entity_number": 20,
+                "name": "transport-belt",
+                "position": {
+                    "x": 3,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 21,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": -2
+                },
+                "direction": 4
+            },
+            {
+                "entity_number": 22,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": -1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 23,
+                "name": "underground-belt",
+                "position": {
+                    "x": 4,
+                    "y": -1
+                },
+                "direction": 2,
+                "type": "output"
+            },
+            {
+                "entity_number": 24,
+                "name": "transport-belt",
+                "position": {
+                    "x": 4,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 25,
+                "name": "splitter",
+                "position": {
+                    "x": 5,
+                    "y": -1.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 26,
+                "name": "transport-belt",
+                "position": {
+                    "x": 7,
+                    "y": -1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 27,
+                "name": "transport-belt",
+                "position": {
+                    "x": 7,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 28,
+                "name": "transport-belt",
+                "position": {
+                    "x": 6,
+                    "y": -2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 29,
+                "name": "transport-belt",
+                "position": {
+                    "x": 6,
+                    "y": -1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 30,
+                "name": "transport-belt",
+                "position": {
+                    "x": -7,
+                    "y": 0
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 31,
+                "name": "transport-belt",
+                "position": {
+                    "x": -7,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 32,
+                "name": "splitter",
+                "position": {
+                    "x": -6,
+                    "y": 0.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 33,
+                "name": "underground-belt",
+                "position": {
+                    "x": -5,
+                    "y": 0
+                },
+                "direction": 2,
+                "type": "input"
+            },
+            {
+                "entity_number": 34,
+                "name": "transport-belt",
+                "position": {
+                    "x": -5,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 35,
+                "name": "transport-belt",
+                "position": {
+                    "x": -4,
+                    "y": 0
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 36,
+                "name": "transport-belt",
+                "position": {
+                    "x": -4,
+                    "y": 1
+                }
+            },
+            {
+                "entity_number": 37,
+                "name": "transport-belt",
+                "position": {
+                    "x": -2,
+                    "y": 0
+                },
+                "direction": 4
+            },
+            {
+                "entity_number": 38,
+                "name": "underground-belt",
+                "position": {
+                    "x": -1,
+                    "y": 0
+                },
+                "direction": 2,
+                "type": "output"
+            },
+            {
+                "entity_number": 39,
+                "name": "transport-belt",
+                "position": {
+                    "x": -1,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 40,
+                "name": "transport-belt",
+                "position": {
+                    "x": -2,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 41,
+                "name": "splitter",
+                "position": {
+                    "x": 1,
+                    "y": 1.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 42,
+                "name": "transport-belt",
+                "position": {
+                    "x": 0,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 43,
+                "name": "underground-belt",
+                "position": {
+                    "x": 1,
+                    "y": 0
+                },
+                "direction": 2,
+                "type": "input"
+            },
+            {
+                "entity_number": 44,
+                "name": "transport-belt",
+                "position": {
+                    "x": 3,
+                    "y": 0
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 45,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": 0
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 46,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": 1
+                }
+            },
+            {
+                "entity_number": 47,
+                "name": "underground-belt",
+                "position": {
+                    "x": 5,
+                    "y": 0
+                },
+                "direction": 2,
+                "type": "output"
+            },
+            {
+                "entity_number": 48,
+                "name": "transport-belt",
+                "position": {
+                    "x": 4,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 49,
+                "name": "transport-belt",
+                "position": {
+                    "x": 5,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 50,
+                "name": "underground-belt",
+                "position": {
+                    "x": 4,
+                    "y": 0
+                },
+                "direction": 4,
+                "type": "output"
+            },
+            {
+                "entity_number": 51,
+                "name": "splitter",
+                "position": {
+                    "x": 6,
+                    "y": 0.5
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 52,
+                "name": "transport-belt",
+                "position": {
+                    "x": 7,
+                    "y": 1
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 53,
+                "name": "transport-belt",
+                "position": {
+                    "x": 7,
+                    "y": 0
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 54,
+                "name": "transport-belt",
+                "position": {
+                    "x": 2,
+                    "y": 2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 55,
+                "name": "transport-belt",
+                "position": {
+                    "x": 3,
+                    "y": 2
+                },
+                "direction": 2
+            },
+            {
+                "entity_number": 56,
+                "name": "underground-belt",
+                "position": {
+                    "x": 4,
+                    "y": 2
+                },
+                "type": "output"
+            }
+        ],
+        "item": "blueprint",
+        "label": "4 full lane balancer",
+        "version": 68722819072
+    }
+}
