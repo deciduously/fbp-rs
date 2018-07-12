@@ -33,7 +33,7 @@ fn serialize_blueprint(json: &str) -> io::Result<Container> {
 }
 
 // Call decode and then serialize to bring a compressed string to a Rust struct
-fn read_blueprint(bp: &str) -> io::Result<Container> {
+pub fn read_blueprint(bp: &str) -> io::Result<Container> {
     Ok(serialize_blueprint(&decode_blueprint(bp)?)?)
 }
 

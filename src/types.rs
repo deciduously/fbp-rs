@@ -4,7 +4,8 @@ pub type ItemCountType = u32;
 pub type GraphicsVariation = u8;
 
 // Top-level container
-// How do I do this?  Json is of form { "blueprint": <#Blueprint> }
+// I want to be able to show this - is a Display impl sufficient?
+// How do we get the full size?
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct Container {
     pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
