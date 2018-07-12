@@ -7,7 +7,7 @@ pub type GraphicsVariation = u8;
 // How do I do this?  Json is of form { "blueprint": <#Blueprint> }
 #[derive(Debug, Deserialize)]
 pub struct Container {
-    pub blueprint: Blueprint,
+    pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
 }
 
 // TODO this is a placeholder I put in just to write a unti test

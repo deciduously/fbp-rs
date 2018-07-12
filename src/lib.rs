@@ -14,13 +14,15 @@ use types::*;
 
 // returns a Json string from the compressed Blueprint
 fn decode_blueprint(bp: &str) -> io::Result<String> {
-    // skip the first byte
+    // skip the version byte - it's always "0" in factorio 0.15 and 0.16
     let encoded = &bp[1..];
 
     // base64 decode
     let decoded = decode(encoded).expect("Could not base64 decode blueprint");
 
+    println!("{:?}", &decoded);
     // decompress with zlib deflate
+    // Note - you're getting "invalid gzip header" when even just pasing ing "random str sdata".as_bytes()
     let mut bp_decoder = GzDecoder::new(&decoded[..]);
     let mut json_string = String::new();
     bp_decoder.read_to_string(&mut json_string)?;
@@ -30,7 +32,6 @@ fn decode_blueprint(bp: &str) -> io::Result<String> {
 
 fn serialize_blueprint(json: &str) -> io::Result<Container> {
     let ret: Container = serde_json::from_str(json).expect("Could not deserialize json");
-    println!("{:#?}", ret);
     Ok(ret)
 }
 
