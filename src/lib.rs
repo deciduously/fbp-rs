@@ -8,7 +8,7 @@ extern crate serde_json;
 mod types;
 
 use base64::decode;
-use flate2::read::GzDecoder;
+use flate2::read::ZlibDecoder;
 use std::io::{self, prelude::*};
 use types::*;
 
@@ -20,19 +20,21 @@ fn decode_blueprint(bp: &str) -> io::Result<String> {
     // base64 decode
     let decoded = decode(encoded).expect("Could not base64 decode blueprint");
 
-    println!("{:?}", &decoded);
     // decompress with zlib deflate
-    // Note - you're getting "invalid gzip header" when even just pasing ing "random str sdata".as_bytes()
-    let mut bp_decoder = GzDecoder::new(&decoded[..]);
+    let mut bp_decoder = ZlibDecoder::new(&decoded[..]);
     let mut json_string = String::new();
     bp_decoder.read_to_string(&mut json_string)?;
-    println!("{:?}", json_string);
     Ok(json_string)
 }
 
 fn serialize_blueprint(json: &str) -> io::Result<Container> {
     let ret: Container = serde_json::from_str(json).expect("Could not deserialize json");
     Ok(ret)
+}
+
+// Call decode and then serialize to bring a compressed string to a Rust struct
+fn read_blueprint(bp: &str) -> io::Result<Container> {
+    Ok(serialize_blueprint(&decode_blueprint(bp)?)?)
 }
 
 #[cfg(test)]
@@ -42,18 +44,17 @@ mod tests {
     };
     #[test]
     fn test_decode_blueprint() {
-        use super::decode_blueprint;
+        use super::*;
+        // serialize the sample json, and compare it to our version
 
-        // Grab the sample blueprint
-        let bp_file =
+        let sample_bp_f =
             File::open(Path::new("./resource/balancer.txt")).expect("Could not open balancer.txt");
-        let mut bp_reader = BufReader::new(bp_file);
+        let mut bp_reader = BufReader::new(sample_bp_f);
         let mut bp_string = String::new();
         bp_reader
             .read_to_string(&mut bp_string)
             .expect("Could not read balancer.txt");
 
-        // Grab the expected blueprint JSON
         let decoded_target_file = File::open(Path::new("./resource/balancer.json"))
             .expect("Could not open balancer.json");
         let mut json_reader = BufReader::new(decoded_target_file);
@@ -62,24 +63,9 @@ mod tests {
             .read_to_string(&mut json_string)
             .expect("Could not read balancer.json");
 
-        // you're getting "invalid gzip header"
-        let attempt = decode_blueprint(&bp_string).unwrap();
-        assert_eq!(attempt, json_string);
-    }
-
-    #[test]
-    fn test_serialize_blueprint() {
-        use super::serialize_blueprint;
-
-        let decoded_target_file = File::open(Path::new("./resource/balancer.json"))
-            .expect("Could not open balancer.json");
-        let mut json_reader = BufReader::new(decoded_target_file);
-        let mut json_string = String::new();
-        json_reader
-            .read_to_string(&mut json_string)
-            .expect("Could not read balancer.json");
-        let serialized = serialize_blueprint(&json_string).unwrap();
-
-        assert!(serialized.ok());
+        assert_eq!(
+            read_blueprint(&bp_string).unwrap(),
+            serialize_blueprint(&json_string).unwrap()
+        )
     }
 }

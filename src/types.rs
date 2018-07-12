@@ -5,18 +5,9 @@ pub type GraphicsVariation = u8;
 
 // Top-level container
 // How do I do this?  Json is of form { "blueprint": <#Blueprint> }
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Container {
     pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
-}
-
-// TODO this is a placeholder I put in just to write a unti test
-// which ensures the deserialization works - if we succeeded, this fn will exist which is good enough for me
-// You should really write out an expected type
-impl Container {
-    pub fn ok(&self) -> bool {
-        true
-    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -28,7 +19,7 @@ pub struct BlueprintBook {
     pub version: i64,                      // map version of the map the blueprint was created in
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Blueprint {
     pub item: String,             // always "blueprint"
     pub label: String,            // user-defined name
@@ -38,7 +29,7 @@ pub struct Blueprint {
     pub version: i64,             // map version of the map the blueprint was created in
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Entity {
     pub entity_number: i32, // 1-based index of entity
     pub name: String,       // e.g. "offshore-pump"
@@ -69,26 +60,26 @@ pub struct Entity {
     pub station: Option<String>, // Name of the train station
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Tile {
     pub name: String,       // prototype name of the tile (e.g. "concrete")
     pub position: Position, // within the blueprint
 }
 
 // 0,0 is the center
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Position {
     pub x: f64,
     pub y: f64,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Icon {
     pub index: i32,       // Index of the icon, 1-based
     pub signal: SignalID, // the icon that is displayed
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct SignalID {
     pub name: String, // name of the signal prototype this signal is set to
     #[serde(rename = "type")]
@@ -96,7 +87,7 @@ pub struct SignalID {
 }
 
 // the spec has digits 1 and 2 as key names
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Connection {
     #[serde(rename = "1")]
     pub one: ConnectionPoint, // Default for everything that doens't have multiple connection points
@@ -104,35 +95,35 @@ pub struct Connection {
     pub two: Option<ConnectionPoint>, // e.g. the "output" of an arithmetic combinator
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct ConnectionPoint {
     pub red: Vec<ConnectionData>,   // all red wire connections
     pub green: Vec<ConnectionData>, // all green wire connections
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct ConnectionData {
     pub entity_id: i32,
     pub circuit_id: i32,
 }
 
 // One or more key-val pairs - key is String of iitem name, value is amt requested
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct ItemRequest {}
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct ItemFilter {
     pub name: String, // name of prototype
     pub index: i32,   // index of filter, 1-based
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct InfinitySettings {
     pub remove_unfiltered_items: bool, // this is a checkbox in the UI
     pub filters: Option<Vec<InfinityFilter>>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct InfinityFilter {
     pub name: String, // name of the prototype
     pub count: ItemCountType,
@@ -140,21 +131,21 @@ pub struct InfinityFilter {
     pub index: i32,   // 1-based
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct LogisticFilter {
     pub name: String,         // name ofthe prototype
     pub index: i32,           // 1-based
     pub count: ItemCountType, // number filter is set to, 0 for storage chests
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct SpeakerParameter {
     pub playback_volume: f64,    // volume of speaker
     pub playback_globally: bool, // global playback enabled
     pub allow_polyphony: bool,   // speaks for itself
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct SpeakerAlertParameter {
     pub show_alert: bool,
     pub show_on_map: bool,        // is icon shown on map
@@ -162,7 +153,7 @@ pub struct SpeakerAlertParameter {
     pub alert_message: String,    // body of the alert
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Color {
     pub r: i32,
     pub g: i32,
