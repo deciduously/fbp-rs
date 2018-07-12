@@ -3,38 +3,54 @@
 pub type ItemCountType = u32;
 pub type GraphicsVariation = u8;
 
+// Top-level container
+// How do I do this?  Json is of form { "blueprint": <#Blueprint> }
+#[derive(Debug, Deserialize)]
+pub struct Container {
+    pub blueprint: Blueprint,
+}
+
+// TODO this is a placeholder I put in just to write a unti test
+// which ensures the deserialization works - if we succeeded, this fn will exist which is good enough for me
+// You should really write out an expected type
+impl Container {
+    pub fn ok(&self) -> bool {
+        true
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct BlueprintBook {
     pub item: String,                      // always "blueprint-book"
     pub label: String,                     // user-defined name
     pub blueprints: Vec<(i32, Blueprint)>, // 0-based index, blueprint from below
-    pub active_index: i32,
-    pub version: i64, // map version of the map the blueprint was created in
+    pub active_index: i32,                 // selected blueprint
+    pub version: i64,                      // map version of the map the blueprint was created in
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Blueprint {
-    pub item: String,          // always "blueprint"
-    pub label: String,         // user-defined name
-    pub entities: Vec<Entity>, // actual content
-    pub tiles: Vec<Tile>,      // tiles included
-    pub icons: Vec<Icon>,      // icons of the blueprint set by the user
-    pub version: i64,          // map version of the map the blueprint was created in
+    pub item: String,             // always "blueprint"
+    pub label: String,            // user-defined name
+    pub entities: Vec<Entity>,    // actual content
+    pub tiles: Option<Vec<Tile>>, // tiles included
+    pub icons: Vec<Icon>,         // icons of the blueprint set by the user
+    pub version: i64,             // map version of the map the blueprint was created in
 }
 
-// NOTE underground_type sepcified as "type" - might be an issue
 #[derive(Debug, Deserialize)]
 pub struct Entity {
     pub entity_number: i32, // 1-based index of entity
     pub name: String,       // e.g. "offshore-pump"
     pub position: Position,
-    pub direction: Option<u32>,       //uint (optional) per spec
-    pub connections: Vec<Connection>, // circuit connection
-    //pub control_behavior: // TODO what is this??
+    pub direction: Option<u32>,               //uint (optional) per spec
+    pub connections: Option<Vec<Connection>>, // circuit connection
+    //pub control_behavior:                                 // TODO what is this??
     pub items: Option<ItemRequest>, // defines the item-request-proxy when blueprint is placed, optional
     pub recipe: Option<String>,     // name of the recipe this machine is set to, optional
-    pub bar: Option<i32>, // inex of first inaccessible item slot due to limiting with the red "bar"
+    pub bar: Option<i32>, // index of first inaccessible item slot due to limiting with the red "bar"
     pub infinity_settings: Option<InfinitySettings>,
+    #[serde(rename = "type")]
     pub underground_type: Option<String>, // either "input" or "output" - type of underground belt or loader
     pub input_priority: Option<String>, // input prio of splitter, "right" or "left" - "none" is omitted
     pub output_priority: Option<String>, // output prio of splitter, "right" or "left" - "none" is omitted
@@ -62,8 +78,8 @@ pub struct Tile {
 // 0,0 is the center
 #[derive(Debug, Deserialize)]
 pub struct Position {
-    pub x: i32,
-    pub y: i32,
+    pub x: f64,
+    pub y: f64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -72,17 +88,19 @@ pub struct Icon {
     pub signal: SignalID, // the icon that is displayed
 }
 
-// This is supposed to be "name": string, "type": string but "type" is reserved by Rust
 #[derive(Debug, Deserialize)]
 pub struct SignalID {
-    pub name: String,        // name of the signal prototype this signal is set ot
+    pub name: String, // name of the signal prototype this signal is set to
+    #[serde(rename = "type")]
     pub signal_type: String, // either "item", "fluid", or "virtual" - you should make an enum with FromStr/ToStr
 }
 
 // the spec has digits 1 and 2 as key names
 #[derive(Debug, Deserialize)]
 pub struct Connection {
+    #[serde(rename = "1")]
     pub one: ConnectionPoint, // Default for everything that doens't have multiple connection points
+    #[serde(rename = "2")]
     pub two: Option<ConnectionPoint>, // e.g. the "output" of an arithmetic combinator
 }
 

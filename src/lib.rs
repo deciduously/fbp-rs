@@ -24,12 +24,13 @@ fn decode_blueprint(bp: &str) -> io::Result<String> {
     let mut bp_decoder = GzDecoder::new(&decoded[..]);
     let mut json_string = String::new();
     bp_decoder.read_to_string(&mut json_string)?;
-    println!("{:#?}", json_string);
+    println!("{:?}", json_string);
     Ok(json_string)
 }
 
-fn serialize_blueprint(json: &str) -> io::Result<Blueprint> {
-    let ret: Blueprint = serde_json::from_str(json)?;
+fn serialize_blueprint(json: &str) -> io::Result<Container> {
+    let ret: Container = serde_json::from_str(json).expect("Could not deserialize json");
+    println!("{:#?}", ret);
     Ok(ret)
 }
 
@@ -60,7 +61,9 @@ mod tests {
             .read_to_string(&mut json_string)
             .expect("Could not read balancer.json");
 
-        assert_eq!(decode_blueprint(&bp_string).unwrap(), json_string);
+        // you're getting "invalid gzip header"
+        let attempt = decode_blueprint(&bp_string).unwrap();
+        assert_eq!(attempt, json_string);
     }
 
     #[test]
@@ -74,8 +77,8 @@ mod tests {
         json_reader
             .read_to_string(&mut json_string)
             .expect("Could not read balancer.json");
+        let serialized = serialize_blueprint(&json_string).unwrap();
 
-        println!("{:#?}", serialize_blueprint(&json_string));
-        assert_eq!(2, 3); // TODO
+        assert!(serialized.ok());
     }
 }
