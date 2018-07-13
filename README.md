@@ -1,5 +1,8 @@
 # fbp-rs
 
-WIP.  Currently it can take a Factorio blueprint string like the one found at [resource/balancer.txt](http://github.com/deciduously/fbp-rs/blob/master/resource/balancer.txt) and turn it into a Rust datastructure.  For testing purposes, the json produced from decoding that string can be found at [resource/balancer.json](https://github.com/deciduously/fbp-rs/blob/master/resource/balancer.json), but it's only used to test against the app's version.
+## Dependencies
+* Stable rust 1.26.0+
+## Usage
+This app is organized into a library`fbp-rs` and a binary `fbp-tool`.  To use it invoke `cargo run --bin fbp-tool` or simply `cargo run`.  It will use [resource/balancer.txt](https://github.com/deciduously/fbp-rs/blob/master/resource/balancer.txt) if invoked without arguments, or attempt to use the first argument given.  I've included [resource/balancer.json](https://github.com/deciduously/fbp-rs/blob/master/resource/balancer.json) as a reference for what json this example blueprint decodes to before serializing into a Rust struct.
 
-Stay tuned for hopefully something useful here.
+Stay tuned for hopefully something useful here, eventually.

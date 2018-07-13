@@ -5,5 +5,5 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-mod blueprint;
+pub mod blueprint;
 mod types;

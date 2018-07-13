@@ -1,5 +1,7 @@
 // see https://wiki.factorio.com/Blueprint_string_format for specification
 
+use std::fmt;
+
 pub type ItemCountType = u32;
 pub type GraphicsVariation = u8;
 
@@ -28,6 +30,20 @@ pub struct Blueprint {
     pub tiles: Option<Vec<Tile>>, // tiles included
     pub icons: Vec<Icon>,         // icons of the blueprint set by the user
     pub version: i64,             // map version of the map the blueprint was created in
+}
+
+impl fmt::Display for Blueprint {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut disp_entities = String::new();
+        for e in &self.entities {
+            disp_entities.push_str(&format!("{}\n", e))
+        }
+        write!(
+            f,
+            "{}:\n{}map v. {}",
+            self.label, disp_entities, self.version
+        )
+    }
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
@@ -59,6 +75,12 @@ pub struct Entity {
     pub variation: Option<GraphicsVariation>, // used by SimplyEntityWithOwner
     pub color: Option<Color>, // SimpleEntityWithForce, SimpleEntityWithOwner, or train station
     pub station: Option<String>, // Name of the train station
+}
+
+impl fmt::Display for Entity {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
