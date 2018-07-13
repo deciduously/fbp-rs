@@ -4,6 +4,30 @@ use serde_json;
 use std::io::{self, prelude::*};
 use types::*;
 
+// Grid type to coerce the entity list into
+// Factorio blueprints encompass a 14x14 grid, with 0,0 being the center
+// See if we can't get this into an array - need to get Entity to by Copy
+// the Strings are holding you up
+#[derive(Debug)]
+pub struct Grid {
+    pub cells: Vec<Vec<Option<Entity>>>,
+}
+
+impl Grid {
+    // TODO real error
+    pub fn from(c: Container) -> Result<Self, String> {
+        let entities = c.blueprint.entities;
+        let mut cells = vec![vec![None; 14]; 14];
+        for e in &entities {
+            // replace the proper cell with the entity
+            let pos = &e.position;
+            // this is NOT correct - your raw positions need to be translated to grid positions
+            cells[pos.x as usize][pos.y as usize] = Some(e.clone());
+        }
+        Ok(Grid { cells: cells })
+    }
+}
+
 // returns a Json string from the compressed Blueprint
 fn decode_blueprint(bp: &str) -> io::Result<String> {
     // skip the version byte - it's always "0" in factorio 0.15 and 0.16

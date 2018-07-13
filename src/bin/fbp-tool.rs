@@ -1,6 +1,6 @@
 extern crate fbp_rs;
 
-use fbp_rs::blueprint::read_blueprint;
+use fbp_rs::blueprint::{read_blueprint, Grid};
 use std::{
     env, fs::File, io::{prelude::*, BufReader}, path::Path,
 };
@@ -25,6 +25,7 @@ fn main() {
     };
 
     let parsed_bp = read_blueprint(&bp_string).unwrap();
+    let grid = Grid::from(parsed_bp).unwrap();
 
-    println!("fbp-tool\n{}", parsed_bp);
+    println!("fbp-tool\n{:#?}", grid);
 }
