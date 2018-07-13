@@ -24,7 +24,7 @@ fn main() {
         args[1].clone()
     };
 
-    let parsed_bp = read_blueprint(&bp_string);
+    let parsed_bp = read_blueprint(&bp_string).unwrap();
 
-    println!("fbp-tool\n{:?}", parsed_bp);
+    println!("fbp-tool\n{}", parsed_bp);
 }

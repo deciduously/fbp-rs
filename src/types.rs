@@ -13,6 +13,12 @@ pub struct Container {
     pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
 }
 
+impl fmt::Display for Container {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.blueprint)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct BlueprintBook {
     pub item: String,                      // always "blueprint-book"
@@ -79,7 +85,8 @@ pub struct Entity {
 
 impl fmt::Display for Entity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.name)
+        // TODO direction
+        write!(f, "{}: {}", self.name, self.position)
     }
 }
 
@@ -94,6 +101,12 @@ pub struct Tile {
 pub struct Position {
     pub x: f64,
     pub y: f64,
+}
+
+impl fmt::Display for Position {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({},{})", self.x, self.y)
+    }
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
