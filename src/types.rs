@@ -13,6 +13,8 @@ pub struct Container {
     pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
 }
 
+// You could have a completelete separate BookContainer, and when parsing, try both?
+
 impl fmt::Display for Container {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.blueprint)
@@ -38,16 +40,37 @@ pub struct Blueprint {
     pub version: i64,             // map version of the map the blueprint was created in
 }
 
+impl Blueprint {
+    // returns the furthest X coord and Y coord from zero in entities
+    pub fn size(&self) -> (usize, usize) {
+        // traverse every entity, store largest of each
+        let mut largest_x: f64 = 0.0;
+        let mut largest_y: f64 = 0.0;
+
+        for e in &self.entities {
+            if e.position.x.abs() > largest_x {
+                largest_x = e.position.x;
+            }
+
+            if e.position.y.abs() > largest_y {
+                largest_y = e.position.y;
+            }
+        }
+        (largest_x as usize, largest_y as usize)
+    }
+}
+
 impl fmt::Display for Blueprint {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut disp_entities = String::new();
         for e in &self.entities {
             disp_entities.push_str(&format!("{}\n", e))
         }
+        let (xsize, ysize) = self.size();
         write!(
             f,
-            "{}:\n{}map v. {}",
-            self.label, disp_entities, self.version
+            "{}:\nsize: ({},{})\n{}map v. {}",
+            self.label, xsize, ysize, disp_entities, self.version
         )
     }
 }

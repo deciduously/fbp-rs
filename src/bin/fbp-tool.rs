@@ -25,7 +25,7 @@ fn main() {
     };
 
     let parsed_bp = read_blueprint(&bp_string).unwrap();
-    let grid = Grid::from(parsed_bp).unwrap();
+    //let grid = Grid::from(parsed_bp).unwrap();
 
-    println!("fbp-tool\n{:#?}", grid);
+    println!("fbp-tool\n{}", parsed_bp);
 }
