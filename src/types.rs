@@ -35,7 +35,7 @@ pub struct BlueprintBook {
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct Blueprint {
     pub item: String,             // always "blueprint"
-    pub label: String,            // user-defined name
+    pub label: Option<String>,    // user-defined name
     pub entities: Vec<Entity>,    // actual content
     pub tiles: Option<Vec<Tile>>, // tiles included
     pub icons: Vec<Icon>,         // icons of the blueprint set by the user
@@ -72,7 +72,7 @@ impl fmt::Display for Blueprint {
         write!(
             f,
             "{} (size: {} side square):\n{}map v. {}",
-            self.label,
+            self.label.clone().unwrap_or("Untitled".into()),
             self.size(),
             disp_entities,
             self.version
@@ -141,6 +141,7 @@ impl Position {
     }
     // bp has coords with 0,0 as the center, our Grid type uses 0,0 as the top left corner
     // translate grid returns indices in the cells vector in Grid
+    // TODO this is supes buggy
     pub fn grid_coords(&self, size: usize) -> (usize, usize) {
         let shift = (size / 2) as f64;
         ((self.x + shift) as usize, (self.y + shift) as usize)
