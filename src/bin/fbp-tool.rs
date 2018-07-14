@@ -1,12 +1,16 @@
 extern crate fbp_rs;
 
-use fbp_rs::blueprint::{read_blueprint, Grid};
+use fbp_rs::{
+    blueprint::{read_blueprint, Grid}, entities::EntityShape,
+};
 use std::{
     env, fs::File, io::{prelude::*, BufReader}, path::Path,
 };
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+
+    // TODO clap
 
     // If invoked with no args, use balancer.txt
     // Otherwise attempt to use the first arg
@@ -25,10 +29,17 @@ fn main() {
     };
 
     let parsed_bp = read_blueprint(&bp_string).unwrap();
-    let grid = Grid::from(parsed_bp).unwrap();
+    let shapes: Vec<Result<EntityShape, String>> = parsed_bp
+        .blueprint
+        .entities
+        .iter()
+        .map(EntityShape::from)
+        .collect();
+    println!("{:#?}", shapes);
+    //let grid = Grid::from(parsed_bp).unwrap();
 
-    println!(
-        "fbp-tool\n--------\ninput string:\n{}\n\npreview:\n{}",
-        bp_string, grid
-    );
+    //   println!(
+    //      "fbp-tool\n--------\ninput string:\n{}\n\npreview:\n{}",
+    //      bp_string, grid
+    //  );
 }

@@ -11,7 +11,11 @@ use types::*;
 // you've really gotta get a hold on your project structures, you do something slightly different each time
 // here, types should probably be blueprint.rs and this should be like, render.rs or something
 // move al thedecode/deserialze/read fns over there too
-// the grid positions use half numbers, so lets multiply everything by 2
+
+// NOTE: The Display impl on Grid isnt supposed to be the grand finale, ehre
+// I haven't done anything abotu shapes and sizes yet, which is pretty crucial
+// TODO separate cell type, with its own display, that comes out as a square
+
 #[derive(Debug)]
 pub struct Grid {
     // A 2D grid of cells, each of which can hold multiple entities
