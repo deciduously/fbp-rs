@@ -1,30 +1,111 @@
 use base64::decode;
 use flate2::read::ZlibDecoder;
 use serde_json;
-use std::io::{self, prelude::*};
+use std::{
+    fmt, io::{self, prelude::*},
+};
 use types::*;
 
 // Grid type to coerce the entity list into
-// Factorio blueprints encompass a 14x14 grid, with 0,0 being the center
-// See if we can't get this into an array - need to get Entity to by Copy
-// the Strings are holding you up
+// TODO should this move over into types.rs?  'tis a type
+// you've really gotta get a hold on your project structures, you do something slightly different each time
+// here, types should probably be blueprint.rs and this should be like, render.rs or something
+// move al thedecode/deserialze/read fns over there too
+// the grid positions use half numbers, so lets multiply everything by 2
 #[derive(Debug)]
 pub struct Grid {
-    pub cells: Vec<Vec<Option<Entity>>>,
+    // A 2D grid of cells, each of which can hold multiple entities
+    pub cells: Vec<Vec<Vec<Entity>>>,
 }
 
 impl Grid {
     // TODO real error
     pub fn from(c: Container) -> Result<Self, String> {
-        let entities = c.blueprint.entities;
-        let mut cells = vec![vec![None; 14]; 14];
+        let bp = c.blueprint;
+        let size = bp.size();
+        let entities = bp.entities;
+        let mut cells = vec![vec![vec![]; size]; size];
         for e in &entities {
             // replace the proper cell with the entity
             let pos = &e.position;
-            // this is NOT correct - your raw positions need to be translated to grid positions
-            cells[pos.x as usize][pos.y as usize] = Some(e.clone());
+            // get the top left corner oriented coords from the center-oriented coords
+            let (grid_x, grid_y) = pos.grid_coords(size); // this has f64 coords, truncate here
+                                                          // you have a problem with overlaps - maybe store a Vec
+            cells[grid_x][grid_y].push(e.clone());
         }
-        Ok(Grid { cells: cells })
+        Ok(Grid { cells })
+    }
+
+    pub fn max_cell_len(&self) -> usize {
+        let mut max = 0;
+        for line in &self.cells {
+            for cell in line.iter() {
+                let cell_len = cell.len();
+                if cell_len > max {
+                    max = cell_len;
+                }
+            }
+        }
+        max
+    }
+
+    pub fn max_line_len(&self) -> usize {
+        let mut max = 0;
+        for line in &self.cells {
+            let mut line_max_len = line.len();
+            for cell in line.iter() {
+                let cell_len = cell.len();
+                if cell_len > line_max_len {
+                    line_max_len = cell_len;
+                }
+            }
+            if line_max_len > max {
+                max = line_max_len
+            }
+        }
+        max
+    }
+}
+
+impl fmt::Display for Grid {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // get the max lengths first
+        let max_cell_len = self.max_cell_len() * ENTITY_LEN;
+        let max_line_len = self.max_line_len() * max_cell_len;
+        let mut ret = String::new();
+        for line in &self.cells {
+            let mut line_string = String::from("|");
+            let line_padding_diff = ((max_line_len - line.len() * max_cell_len) / 2) + 1;
+            for _ in 0..line_padding_diff {
+                line_string.push_str(" ");
+            }
+            for cell in line.iter() {
+                let mut cell_string = String::from(":c:");
+
+                let cell_padding_diff = ((max_cell_len - cell.len() * ENTITY_LEN) / 2) + 1;
+                for _ in 0..cell_padding_diff {
+                    cell_string.push_str(" ");
+                }
+                for entity in cell.iter() {
+                    // ensure its exactly ENTITY_LEN, no more, no less
+                    let mut e = format!("{:1$}", entity, ENTITY_LEN);
+                    e.truncate(ENTITY_LEN);
+                    cell_string.push_str(&format!("{:1$}", e, ENTITY_LEN));
+                }
+                for _ in 0..cell_padding_diff {
+                    cell_string.push_str(" ")
+                }
+
+                cell_string.push_str(":c:");
+                line_string.push_str(&cell_string);
+            }
+            for _ in 0..line_padding_diff {
+                line_string.push_str(" ");
+            }
+            line_string.push_str("|\n");
+            ret.push_str(&line_string);
+        }
+        writeln!(f, "{}", ret)
     }
 }
 
@@ -43,14 +124,14 @@ fn decode_blueprint(bp: &str) -> io::Result<String> {
     Ok(json_string)
 }
 
-fn serialize_blueprint(json: &str) -> io::Result<Container> {
+fn deserialize_blueprint(json: &str) -> io::Result<Container> {
     let ret: Container = serde_json::from_str(json).expect("Could not deserialize json");
     Ok(ret)
 }
 
 // Call decode and then serialize to bring a compressed string to a Rust struct
 pub fn read_blueprint(bp: &str) -> io::Result<Container> {
-    Ok(serialize_blueprint(&decode_blueprint(bp)?)?)
+    Ok(deserialize_blueprint(&decode_blueprint(bp)?)?)
 }
 
 #[cfg(test)]
@@ -79,7 +160,7 @@ mod tests {
 
         assert_eq!(
             read_blueprint(&bp_string).unwrap(),
-            serialize_blueprint(&json_string).unwrap()
+            deserialize_blueprint(&json_string).unwrap()
         )
     }
 }

@@ -11,7 +11,7 @@ fn main() {
     // If invoked with no args, use balancer.txt
     // Otherwise attempt to use the first arg
     let bp_string = if args.len() == 1 {
-        println!("No argument given, using balancer.txt");
+        println!("*** No argument given, using balancer.txt ***");
         let bp_file =
             File::open(Path::new("./resource/balancer.txt")).expect("Could not open balancer.txt");
         let mut bp_str_reader = BufReader::new(bp_file);
@@ -25,7 +25,10 @@ fn main() {
     };
 
     let parsed_bp = read_blueprint(&bp_string).unwrap();
-    //let grid = Grid::from(parsed_bp).unwrap();
+    let grid = Grid::from(parsed_bp).unwrap();
 
-    println!("fbp-tool\n{}", parsed_bp);
+    println!(
+        "fbp-tool\n--------\ninput string:\n{}\n\npreview:\n{}",
+        bp_string, grid
+    );
 }

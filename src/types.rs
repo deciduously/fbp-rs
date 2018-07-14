@@ -2,6 +2,8 @@
 
 use std::fmt;
 
+pub static ENTITY_LEN: usize = 8;
+
 pub type ItemCountType = u32;
 pub type GraphicsVariation = u8;
 
@@ -41,22 +43,23 @@ pub struct Blueprint {
 }
 
 impl Blueprint {
-    // returns the furthest X coord and Y coord from zero in entities
-    pub fn size(&self) -> (usize, usize) {
-        // traverse every entity, store largest of each
-        let mut largest_x: f64 = 0.0;
-        let mut largest_y: f64 = 0.0;
-
+    // returns the dimension of a square which can fit all the entities
+    // I hestitate to say smallest because I'm not mathy enough and this implementation feels lazy to me
+    // I don't really care if its a size too large as long as it works.  Bite me
+    pub fn size(&self) -> usize {
+        // find the largest coord
+        let mut largest_coord: f64 = 0.0;
         for e in &self.entities {
-            if e.position.x.abs() > largest_x {
-                largest_x = e.position.x;
+            if e.position.x.abs() > largest_coord {
+                largest_coord = e.position.x;
             }
 
-            if e.position.y.abs() > largest_y {
-                largest_y = e.position.y;
+            if e.position.y.abs() > largest_coord {
+                largest_coord = e.position.y;
             }
         }
-        (largest_x as usize, largest_y as usize)
+        // get the next largest integer, increment it, and double it
+        (largest_coord.ceil() as usize) * 2 + 1
     }
 }
 
@@ -66,11 +69,13 @@ impl fmt::Display for Blueprint {
         for e in &self.entities {
             disp_entities.push_str(&format!("{}\n", e))
         }
-        let (xsize, ysize) = self.size();
         write!(
             f,
-            "{}:\nsize: ({},{})\n{}map v. {}",
-            self.label, xsize, ysize, disp_entities, self.version
+            "{} (size: {} side square):\n{}map v. {}",
+            self.label,
+            self.size(),
+            disp_entities,
+            self.version
         )
     }
 }
@@ -109,7 +114,7 @@ pub struct Entity {
 impl fmt::Display for Entity {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // TODO direction
-        write!(f, "{}: {}", self.name, self.position)
+        write!(f, "{}", self.name)
     }
 }
 
@@ -120,10 +125,26 @@ pub struct Tile {
 }
 
 // 0,0 is the center
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq)]
 pub struct Position {
     pub x: f64,
     pub y: f64,
+}
+
+impl Position {
+    pub fn new(x: f64, y: f64) -> Self {
+        Position { x, y }
+    }
+    // returns delta_x, delta_y
+    pub fn distance(&self, target: &Self) -> (f64, f64) {
+        (self.x - target.x, self.y - target.y)
+    }
+    // bp has coords with 0,0 as the center, our Grid type uses 0,0 as the top left corner
+    // translate grid returns indices in the cells vector in Grid
+    pub fn grid_coords(&self, size: usize) -> (usize, usize) {
+        let shift = (size / 2) as f64;
+        ((self.x + shift) as usize, (self.y + shift) as usize)
+    }
 }
 
 impl fmt::Display for Position {
@@ -218,4 +239,44 @@ pub struct Color {
     pub g: i32,
     pub b: i32,
     pub a: i32,
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_translate_grid_origin() {
+        use super::Position;
+
+        let pos = Position::new(0.0, 0.0);
+        let size: usize = 7;
+        let (target_x, target_y) = (3, 3);
+        assert_eq!(pos.grid_coords(size), (target_x, target_y))
+    }
+    #[test]
+    fn test_translate_grid_positive_whole() {
+        use super::Position;
+
+        let pos = Position::new(1.0, 2.0);
+        let size: usize = 7;
+        let (target_x, target_y) = (4, 5);
+        assert_eq!(pos.grid_coords(size), (target_x, target_y))
+    }
+    #[test]
+    fn test_translate_grid_negative_whole() {
+        use super::Position;
+
+        let pos = Position::new(3.0, -2.0);
+        let size: usize = 7;
+        let (target_x, target_y) = (6, 1);
+        assert_eq!(pos.grid_coords(size), (target_x, target_y))
+    }
+    #[test]
+    fn test_translate_grid_fraction() {
+        use super::Position;
+
+        let pos = Position::new(-1.5, 0.5);
+        let size: usize = 7;
+        let (target_x, target_y) = (1, 3);
+        assert_eq!(pos.grid_coords(size), (target_x, target_y))
+    }
 }
