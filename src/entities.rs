@@ -28,6 +28,7 @@ impl FromStr for EntityType {
 
 #[derive(Debug)]
 pub struct EntityShape {
+    pub name: String,
     pub shape: Polygon<f64>,
 }
 
@@ -45,6 +46,7 @@ impl EntityShape {
                     Point::new(raw_pos.x + 1.0, raw_pos.y + 1.0),
                 ]);
                 Ok(EntityShape {
+                    name: "transport-belt".into(),
                     shape: Polygon::new(exterior.clone(), vec![]),
                 })
             }
@@ -59,6 +61,7 @@ impl EntityShape {
                     Point::new(raw_pos.x + 1.0, raw_pos.y + 1.0),
                 ]);
                 Ok(EntityShape {
+                    name: "splitter".into(),
                     shape: Polygon::new(exterior.clone(), vec![]),
                 })
             }
@@ -72,6 +75,7 @@ impl EntityShape {
                     Point::new(raw_pos.x + 1.0, raw_pos.y + 1.0),
                 ]);
                 Ok(EntityShape {
+                    name: "underground-belt".into(),
                     shape: Polygon::new(exterior.clone(), vec![]),
                 })
             }
