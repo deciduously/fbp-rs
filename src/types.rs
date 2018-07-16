@@ -10,7 +10,7 @@ pub type GraphicsVariation = u8;
 // Top-level container
 // I want to be able to show this - is a Display impl sufficient?
 // How do we get the full size?
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
 pub struct Container {
     pub blueprint: Blueprint, // this should be a union of Blueprint and BlueprintBook
 }
@@ -23,7 +23,7 @@ impl fmt::Display for Container {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct BlueprintBook {
     pub item: String,                      // always "blueprint-book"
     pub label: String,                     // user-defined name
@@ -32,7 +32,7 @@ pub struct BlueprintBook {
     pub version: i64,                      // map version of the map the blueprint was created in
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
 pub struct Blueprint {
     pub item: String,             // always "blueprint"
     pub label: Option<String>,    // user-defined name
@@ -80,7 +80,7 @@ impl fmt::Display for Blueprint {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Entity {
     pub entity_number: i32, // 1-based index of entity
     pub name: String,       // e.g. "offshore-pump"
@@ -118,14 +118,14 @@ impl fmt::Display for Entity {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Tile {
     pub name: String,       // prototype name of the tile (e.g. "concrete")
     pub position: Position, // within the blueprint
 }
 
 // 0,0 is the center
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Position {
     pub x: f64,
     pub y: f64,
@@ -154,13 +154,13 @@ impl fmt::Display for Position {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Icon {
     pub index: i32,       // Index of the icon, 1-based
     pub signal: SignalID, // the icon that is displayed
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SignalID {
     pub name: String, // name of the signal prototype this signal is set to
     #[serde(rename = "type")]
@@ -168,7 +168,7 @@ pub struct SignalID {
 }
 
 // the spec has digits 1 and 2 as key names
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Connection {
     #[serde(rename = "1")]
     pub one: ConnectionPoint, // Default for everything that doens't have multiple connection points
@@ -176,35 +176,35 @@ pub struct Connection {
     pub two: Option<ConnectionPoint>, // e.g. the "output" of an arithmetic combinator
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ConnectionPoint {
     pub red: Vec<ConnectionData>,   // all red wire connections
     pub green: Vec<ConnectionData>, // all green wire connections
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ConnectionData {
     pub entity_id: i32,
     pub circuit_id: i32,
 }
 
 // One or more key-val pairs - key is String of iitem name, value is amt requested
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ItemRequest {}
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ItemFilter {
     pub name: String, // name of prototype
     pub index: i32,   // index of filter, 1-based
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct InfinitySettings {
     pub remove_unfiltered_items: bool, // this is a checkbox in the UI
     pub filters: Option<Vec<InfinityFilter>>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct InfinityFilter {
     pub name: String, // name of the prototype
     pub count: ItemCountType,
@@ -212,21 +212,21 @@ pub struct InfinityFilter {
     pub index: i32,   // 1-based
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct LogisticFilter {
     pub name: String,         // name ofthe prototype
     pub index: i32,           // 1-based
     pub count: ItemCountType, // number filter is set to, 0 for storage chests
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SpeakerParameter {
     pub playback_volume: f64,    // volume of speaker
     pub playback_globally: bool, // global playback enabled
     pub allow_polyphony: bool,   // speaks for itself
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SpeakerAlertParameter {
     pub show_alert: bool,
     pub show_on_map: bool,        // is icon shown on map
@@ -234,7 +234,7 @@ pub struct SpeakerAlertParameter {
     pub alert_message: String,    // body of the alert
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Color {
     pub r: i32,
     pub g: i32,

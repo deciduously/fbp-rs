@@ -1,5 +1,5 @@
-use base64::decode;
-use flate2::read::ZlibDecoder;
+use base64::{decode, encode};
+use flate2::{read::ZlibDecoder, write::ZlibEncoder, Compression};
 use serde_json;
 use std::{
     fmt, io::{self, prelude::*},
@@ -138,6 +138,24 @@ pub fn read_blueprint(bp: &str) -> io::Result<Container> {
     Ok(deserialize_blueprint(&decode_blueprint(bp)?)?)
 }
 
+pub fn write_blueprint(c: &Container) -> io::Result<String> {
+    // serialize to JSON
+    let raw_json = serde_json::to_string(c)?;
+
+    // compress with zlib
+    let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+    encoder.write(&raw_json.as_bytes())?;
+    let compressed = encoder.finish()?;
+
+    // base64 encode
+    let encoded = encode(&compressed);
+
+    // version byte in front - 0 for factorio 0.15/0.16
+    let ret = format!("0{}", encoded);
+
+    Ok(ret)
+}
+
 #[cfg(test)]
 mod tests {
     use std::{fs::File, io::BufReader, path::Path};
@@ -165,6 +183,23 @@ mod tests {
         assert_eq!(
             read_blueprint(&bp_string).unwrap(),
             deserialize_blueprint(&json_string).unwrap()
+        )
+    }
+    #[test]
+    fn test_roundtrip_blueprint() {
+        use super::*;
+
+        let sample_bp_f =
+            File::open(Path::new("./resource/balancer.txt")).expect("Could not open balancer.txt");
+        let mut bp_reader = BufReader::new(sample_bp_f);
+        let mut bp_string = String::new();
+        bp_reader
+            .read_to_string(&mut bp_string)
+            .expect("Could not read balancer.txt");
+
+        assert_eq!(
+            bp_string,
+            write_blueprint(&read_blueprint(&bp_string).unwrap()).unwrap()
         )
     }
 }
