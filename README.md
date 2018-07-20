@@ -1,5 +1,7 @@
 # fbp-rs
+Rust program for reading and writing Factorio blueprints.
 
+This really doesn't do much right now, it was more an exercise than anything.  I'm not planning to actively work on this unless I get really bored.  If you want to implement your own Factorio/Rust thing, by all means take the structs I defined for serde, that's the most tedious part.
 ## Dependencies
 * Stable rust 1.26.0+
 ## Usage
